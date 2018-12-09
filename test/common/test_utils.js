@@ -7,16 +7,18 @@ module.exports = {
 }
 
 function create_mockup_env(callback){
-    fs.mkdirSync('./tmp');
-    // services
-    fs.mkdirSync('./tmp/services/');
-    fs.mkdirSync('./tmp/services/test_service_one/');
-    fs.mkdirSync('./tmp/services/test_service_two/');
-    fs.mkdirSync('./tmp/services/test_service_three/');
-    // utils
-    fs.mkdirSync('./tmp/utils');
+    destroy_mockup_env(() => {
+        fs.mkdirSync('./tmp');
+        // services
+        fs.mkdirSync('./tmp/services/');
+        fs.mkdirSync('./tmp/services/test_service_one/');
+        fs.mkdirSync('./tmp/services/test_service_two/');
+        fs.mkdirSync('./tmp/services/test_service_three/');
+        // utils
+        fs.mkdirSync('./tmp/utils');
 
-    callback();
+        callback();
+    });
 }
 
 function destroy_mockup_env(callback){

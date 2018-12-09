@@ -1,9 +1,7 @@
 'use strict';
 
-const exec = require('child_process').exec;
-const spawn = require('child_process').spawn;
+const proc = require('./proc');
 const path = require('path');
-const __empty = () => {};
 
 module.exports = {
     install: install,
@@ -13,49 +11,9 @@ module.exports = {
     down: down,
     test: test,
     cleanup: cleanup,
-    ps: ps
-}
-
-function __get_script_path(script){
-    var result = path.resolve(__dirname, '../../arch/script/', script);
-    return result;
-}
-
-function __script_out(err, stdout, stderr){
-    if (err){
-        console.log(err);
-    }
-    console.log(stderr);
-    console.log(stdout);
-}
-
-function __resolve_palmer_script(script){
-    if (!script){
-        return;
-    }
-
-    if (script.endsWith('bash')){
-        return __get_script_path(script);
-    }
-
-    return script;
-}
-
-function __spawn(script, args, callback){
-    callback = callback || __empty;
-
-    var spawned = spawn(__resolve_palmer_script(script), args);
-    spawned.stdout.on('data', function(data){
-        callback(data);
-        console.log(data.toString());
-    });
-    spawned.stderr.on('data', function(data){
-        callback(null, data);
-        console.log(data.toString());
-    });
-    spawned.on('exit', function(code){
-        callback(null, null, code);
-    });
+    ps: ps,
+    kill: kill,
+    start: start
 }
 
 function install(cmd){
@@ -77,21 +35,19 @@ function init(dir, cmd){
 }
 
 function up(cmd){
-    __spawn('env_up.bash');
+    proc.spawn('env_up.bash');
 }
 
 function down(cmd){
-    __spawn('env_down.bash');
+    proc.spawn('env_down.bash');
 }
 
 function cleanup(cmd){
-    __spawn('clear_docker_images.bash');
+    proc.spawn('clear_docker_images.bash');
 }
 
-function test(a, b, c){
-    console.log(a);
-    console.log(b);
-    console.log(c);
+function test(cmd){
+    proc.spawn('mocha', ['--recursive']);
 }
 
 function ps(cmd){
@@ -99,5 +55,17 @@ function ps(cmd){
     if (cmd.all){
         options.push('-a');
     }
-    __spawn('docker', options);
+    proc.spawn('docker', options);
+}
+
+function cp(cmd){
+    proc.spawn('docker', options);
+}
+
+function kill(service, cmd){
+    proc.spawn('docker',  ['kill', service]);
+}
+
+function start(service, cmd){
+    proc.spawn('docker',  ['start', service]);
 }

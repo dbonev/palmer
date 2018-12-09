@@ -1,14 +1,17 @@
-var fs_utils = require('../fs/fs_utils.js');
+'use strict';
+
+const fs_utils = require('../fs/fs_utils.js');
 
 module.exports = {
     enumerate_services: enumerate_services
 }
 
 function enumerate_services(callback){
-    var service_directories = fs_utils.get_dirs('./');
+    const service_directories = fs_utils.get_dirs('./services');
     for (const dir of service_directories){
         callback({ 
-            directory: dir 
+            directory: dir,
+            count: service_directories.length
         });
     }
 }

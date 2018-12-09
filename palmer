@@ -44,12 +44,20 @@ program
 program
     .command('cp')
     .description('Show running Docker processes')
-    .option('-a, --all', 'Show all running Docker processes')
+    .option('-u, --utils', 'Copy utils')
     .action(commands.ps);
 
 program
     .command('cleanup')
     .description('Tear the environment down in flames')
     .action(commands.cleanup);
+
+program
+    .command('kill <service>')
+    .action(commands.kill);
+
+program
+    .command('start <service>')
+    .action(commands.start);
 
 program.parse(process.argv);

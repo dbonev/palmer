@@ -13,8 +13,8 @@ describe('Test utils', function(){
             test_utils.destroy_mockup_env(() => {
                 // see it's not there
                 fs.lstat('./tmp/services', (error, result) => {
-                    console.log(error);
                     assert(error);
+                    assert(error.code === 'ENOENT');
                     done();
                 });
             });
