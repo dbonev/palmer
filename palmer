@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var program = require('commander');
+var commands = require('./core/cli/commands');
+
+program
+    .version('0.0.1.0', '-v, --version')
+    .command('init <dir>')
+    .action(commands.init);
+
+program
+    .command('check')
+    .action(commands.check);
+
+program
+    .command('install')
+    .description('Install palmer in /usr/bin')
+    .action(commands.install);
+
+program
+    .command('up')
+    .description('Build the environment')
+    .action(commands.up);
+
+program
+    .command('down')
+    .description('Tear the environment down in flames')
+    .action(commands.down);
+
+program
+    .command('test')
+    .option('-s, --service [service_name]', 'Test the given servie_name')
+    .option('-n, --no-rebuild', 'Do not rebuild, only test')
+    .action(commands.test);
+
+program
+    .command('ps')
+    .description('Show running Docker processes')
+    .option('-a, --all', 'Show all running Docker processes')
+    .action(commands.ps);
+
+program
+    .command('cp')
+    .description('Show running Docker processes')
+    .option('-a, --all', 'Show all running Docker processes')
+    .action(commands.ps);
+
+program
+    .command('cleanup')
+    .description('Tear the environment down in flames')
+    .action(commands.cleanup);
+
+program.parse(process.argv);
