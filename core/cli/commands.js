@@ -2,6 +2,7 @@
 
 const proc = require('./proc');
 const path = require('path');
+const cp = require('../utils/fs/cp');
 
 module.exports = {
     install: install,
@@ -13,7 +14,8 @@ module.exports = {
     cleanup: cleanup,
     ps: ps,
     kill: kill,
-    start: start
+    start: start,
+    cp_utils: cp_utils
 }
 
 function install(cmd){
@@ -58,8 +60,12 @@ function ps(cmd){
     proc.spawn('docker', options);
 }
 
-function cp(cmd){
-    proc.spawn('docker', options);
+function cp_utils(cmd){
+    var filter = null;
+    if (cmd.serviceName){
+        filter = s => s.name === cmd.serviceName;
+    }
+    cp.cp_utils(null, filter);
 }
 
 function kill(service, cmd){

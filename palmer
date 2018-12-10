@@ -42,10 +42,10 @@ program
     .action(commands.ps);
 
 program
-    .command('cp')
+    .command('cp-utils')
     .description('Show running Docker processes')
-    .option('-u, --utils', 'Copy utils')
-    .action(commands.ps);
+    .option('-s, --service-name [service-name]', 'Copy utils in this service only')
+    .action(commands.cp_utils);
 
 program
     .command('cleanup')

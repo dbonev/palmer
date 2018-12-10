@@ -8,7 +8,8 @@ module.exports = {
     get_scriipt_path: get_script_path,
     script_out: script_out,
     resolve_palmer_script: resolve_palmer_script,
-    spawn: spawn_process
+    spawn: spawn_process,
+    empty: __empty
 };
 
 function get_script_path(script){

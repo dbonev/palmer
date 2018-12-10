@@ -3,15 +3,19 @@
 const path = require('path');
 const fs = require('fs');
 const service_utils = require('../services/service_utils');
-const proc = require('../../proc');
+const proc = require('../../cli/proc');
 
 module.exports = {
     cp_utils: cp_utils
 }
 
-function cp_utils(callback){
-    function __cp_utils_to_service(service){
-        proc.spawn('cp', ['-r', 'utils', service.directory], callback);
+function cp_utils(callback, filter){
+    callback = callback || proc.empty;
+
+    function __cp_utils_to_service(service, callback){
+        proc.spawn('cp', ['-r', 'utils', service.directory], () => {
+            callback(service);
+        });
     }
 
     var processed = 0;
@@ -21,5 +25,5 @@ function cp_utils(callback){
                 callback();
             }
         });
-    });
+    }, filter);
 }
