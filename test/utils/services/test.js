@@ -23,9 +23,11 @@ describe('Service Utils', function(){
             assert(s.directory);
             if (s.directory === 'services/test_service_one'){
                 found_service_one = true;
+                assert(s.name === 'test-service-one');
             }
             if (s.directory === 'services/test_service_two'){
                 found_service_two = true;
+                assert(s.name === 'test-service-two');
             }
             if (s.directory === 'frontend'){
                 found_frontend = true;

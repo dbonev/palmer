@@ -20,7 +20,7 @@ function enumerate_services(callback, filter){
         for (const dir of service_directories){
             const service_dto = { 
                 directory: dir,
-                name: path.basename(dir)
+                name: path.basename(dir).replace(/_/g, '-')
             };
             if (filter
                     && !filter(service_dto)){

@@ -47,7 +47,7 @@ describe('cp tests', function(){
                 }
                 process.chdir('..');
                 test_utils.destroy_mockup_env(done);
-            }, s => s.name === 'test_service_one');
+            }, s => s.name === 'test-service-one');
         });
     });
 });
