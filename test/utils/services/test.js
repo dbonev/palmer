@@ -19,8 +19,15 @@ describe('Service Utils', function(){
         let found_service_two = false;
         let found_frontend = false;
         process.chdir('./tmp');
+        var index = 0;
         service_utils.enumerate_services(s => {
             assert(s.directory);
+            if (index === 0){
+                console.log(s);
+                assert(s.name === 'service-registry');
+            }
+
+            index++;
             if (s.directory === 'services/test_service_one'){
                 found_service_one = true;
                 assert(s.name === 'test-service-one');

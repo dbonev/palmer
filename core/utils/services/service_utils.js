@@ -32,7 +32,24 @@ function enumerate_services(callback, filter){
         return result;
     }
 
+    function __sort_dirs(service_directories){
+        const SERVICE_REGISTRY = 'services/service_registry';
+        service_directories.sort((a, b) => {
+            if (a === b){
+                return 0;
+            }
+            if (a === SERVICE_REGISTRY) {
+                return -1;
+            }
+            if (b === SERVICE_REGISTRY) {
+                return 1;
+            }
+            return a < b ? -1 : 1;
+        });
+    }
+
     var service_directories = fs_utils.get_dirs('./services');
+    __sort_dirs(service_directories);
     __add_frontend(service_directories);
     const dtos = __create_dtos();
 

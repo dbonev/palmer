@@ -52,7 +52,8 @@ function init(dir, cmd){
 function up(cmd){
     cp_utils(cmd, function(){
         compile(cmd, function(){
-            proc.spawn('env_up.bash', [cmd.serviceName]);
+            var params = cmd.serviceName ? [cmd.serviceName] : undefined;
+            proc.spawn('env_up.bash', params);
         });
     });
 }

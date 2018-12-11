@@ -17,6 +17,8 @@ function create_mockup_env(callback){
         fs.mkdirSync('./tmp/services/test_service_one/');
         fs.mkdirSync('./tmp/services/test_service_two/');
         fs.mkdirSync('./tmp/services/test_service_three/');
+        fs.mkdirSync('./tmp/services/service_registry/');
+        fs.mkdirSync('./tmp/services/a/');
         // utils
         fs.mkdirSync('./tmp/utils');
 

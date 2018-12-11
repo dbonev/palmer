@@ -2,8 +2,8 @@
 
 'use strict';
 
-var program = require('commander');
-var commands = require('./core/cli/commands');
+let program = require('commander');
+let commands = require('./core/cli/commands');
 
 program
     .version('0.0.1.0', '-v, --version')
