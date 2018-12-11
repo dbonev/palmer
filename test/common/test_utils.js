@@ -9,6 +9,9 @@ module.exports = {
 function create_mockup_env(callback){
     destroy_mockup_env(() => {
         fs.mkdirSync('./tmp');
+        // frontend
+        fs.mkdirSync('./tmp/frontend/');
+
         // services
         fs.mkdirSync('./tmp/services/');
         fs.mkdirSync('./tmp/services/test_service_one/');

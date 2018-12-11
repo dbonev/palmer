@@ -8,6 +8,13 @@ module.exports = {
 }
 
 function enumerate_services(callback, filter){
+    function __add_frontend(service_directories){
+        const fe = fs_utils.get_dirs('./');
+        if (fe.filter(f => f === 'frontend').length){
+            service_directories.push('frontend');
+        }
+    }
+
     function __create_dtos(){
         var result = [];
         for (const dir of service_directories){
@@ -25,7 +32,8 @@ function enumerate_services(callback, filter){
         return result;
     }
 
-    const service_directories = fs_utils.get_dirs('./services');
+    var service_directories = fs_utils.get_dirs('./services');
+    __add_frontend(service_directories);
     const dtos = __create_dtos();
 
     for (const dto of dtos){

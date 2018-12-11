@@ -3,6 +3,7 @@
 const proc = require('./proc');
 const path = require('path');
 const cp = require('../utils/fs/cp');
+const service_utils = require('../utils/services/service_utils');
 
 module.exports = {
     install: install,
@@ -15,7 +16,19 @@ module.exports = {
     ps: ps,
     kill: kill,
     start: start,
-    cp_utils: cp_utils
+    cp_utils: cp_utils,
+    ls_services: ls_services,
+    shell_complete: shell_complete,
+    compile: compile
+}
+
+function __get_service_filter(cmd){
+    var filter = null;
+    if (cmd && cmd.serviceName){
+        filter = s => s.name === cmd.serviceName;
+    }
+
+    return filter;
 }
 
 function install(cmd){
@@ -37,7 +50,11 @@ function init(dir, cmd){
 }
 
 function up(cmd){
-    proc.spawn('env_up.bash');
+    cp_utils(cmd, function(){
+        compile(cmd, function(){
+            proc.spawn('env_up.bash', [cmd.serviceName]);
+        });
+    });
 }
 
 function down(cmd){
@@ -60,12 +77,42 @@ function ps(cmd){
     proc.spawn('docker', options);
 }
 
-function cp_utils(cmd){
-    var filter = null;
-    if (cmd.serviceName){
-        filter = s => s.name === cmd.serviceName;
+function cp_utils(cmd, callback){
+    const filter = __get_service_filter(cmd);
+    cp.cp_utils(callback, filter);
+}
+
+function compile(cmd, callback){
+    function __done(data, error, exit_code){
+        if (exit_code != null){
+            processed++;
+            console.log('Processed ' + processed + ' / ' + total_count);
+        }
+        if (data){
+            process.stdout.write(data.toString());
+        }
+        if (error){
+            process.stdout.write(error.toString());
+        }
+
+        if (callback && processed === total_count){
+            callback();
+        }
     }
-    cp.cp_utils(null, filter);
+    var processed = 0;
+    var total_count = 0;
+    var filter = __get_service_filter(cmd);
+    service_utils.enumerate_services(s => {
+        total_count = s.count;
+        console.log('Running npm install in ' + s.directory);
+        proc.spawn('npm', ['install'], __done, { cwd: s.directory });
+    }, filter);
+}
+
+function ls_services(cmd){
+    service_utils.enumerate_services(s => {
+        console.log(s.name);
+    });
 }
 
 function kill(service, cmd){
@@ -75,3 +122,8 @@ function kill(service, cmd){
 function start(service, cmd){
     proc.spawn('docker',  ['start', service]);
 }
+
+function shell_complete(cmd){
+    proc.spawn('shell_completion.bash');
+}
+

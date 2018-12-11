@@ -21,7 +21,8 @@ program
 
 program
     .command('up')
-    .description('Build the environment')
+    .option('-s, --service-name [service-name]', 'Build only the given servie_name')
+    .description('Build the environment / particular service')
     .action(commands.up);
 
 program
@@ -31,7 +32,7 @@ program
 
 program
     .command('test')
-    .option('-s, --service [service_name]', 'Test the given servie_name')
+    .option('-s, --service-name [service-name]', 'Test the given servie-name')
     .option('-n, --no-rebuild', 'Do not rebuild, only test')
     .action(commands.test);
 
@@ -43,13 +44,13 @@ program
 
 program
     .command('cp-utils')
-    .description('Show running Docker processes')
+    .description('Copy shared utils to services')
     .option('-s, --service-name [service-name]', 'Copy utils in this service only')
     .action(commands.cp_utils);
 
 program
     .command('cleanup')
-    .description('Tear the environment down in flames')
+    .description('Clean-up old Docker images')
     .action(commands.cleanup);
 
 program
@@ -60,4 +61,29 @@ program
     .command('start <service>')
     .action(commands.start);
 
+program
+    .command('ls-services')
+    .description('List all services')
+    .action(commands.ls_services);
+
+program
+    .command('compile')
+    .option('-s, --service-name [service-name]', 'Copy utils in this service only')
+    .description('Build the environment / install npm modules')
+    .action(commands.compile);
+
+program
+    .command('shell-complete')
+    .description('Shell complete script')
+    .action(commands.shell_complete);
+
+program
+    .command('help')
+    .description('Show usage information')
+    .action(() => console.log(program.helpInformation()));
+
 program.parse(process.argv);
+
+if (process.argv.length == 2){
+    console.log(program.helpInformation());
+}

@@ -17,6 +17,7 @@ describe('Service Utils', function(){
         let processed = 0;
         let found_service_one = false;
         let found_service_two = false;
+        let found_frontend = false;
         process.chdir('./tmp');
         service_utils.enumerate_services(s => {
             assert(s.directory);
@@ -26,9 +27,13 @@ describe('Service Utils', function(){
             if (s.directory === 'services/test_service_two'){
                 found_service_two = true;
             }
+            if (s.directory === 'frontend'){
+                found_frontend = true;
+            }
             if (++processed === s.count){
                 assert(found_service_one);
                 assert(found_service_two);
+                assert(found_frontend);
                 process.chdir('..');
                 done();
             }
