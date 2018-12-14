@@ -68,7 +68,7 @@ function cleanup(cmd){
 
 function test(cmd){
     function __up_if_needed(callback){
-        var params = ['--recursive'];
+        var params = ['--recursive', '--timeout=60000'];
         if (cmd.serviceName){
             up(cmd, function(data, err, exit_code){
                 if (exit_code === 0){
