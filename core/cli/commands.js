@@ -49,11 +49,11 @@ function init(dir, cmd){
     console.log('Going to init in ' + dir);
 }
 
-function up(cmd){
+function up(cmd, callback){
     cp_utils(cmd, function(){
         compile(cmd, function(){
             var params = cmd.serviceName ? [cmd.serviceName] : undefined;
-            proc.spawn('env_up.bash', params);
+            proc.spawn('env_up.bash', params, callback);
         });
     });
 }
@@ -67,7 +67,25 @@ function cleanup(cmd){
 }
 
 function test(cmd){
-    proc.spawn('mocha', ['--recursive']);
+    function __up_if_needed(callback){
+        var params = ['--recursive'];
+        if (cmd.serviceName){
+            up(cmd, function(data, err, exit_code){
+                if (exit_code === 0){
+                    service_utils.get_test_dir(cmd.serviceName, function(dir){
+                        params.push(dir);
+                        callback(params);
+                    });
+                }
+            });
+        } else {
+            callback(params);
+        }
+    }
+
+    __up_if_needed(function(params){
+        proc.spawn('mocha', params);
+    });
 }
 
 function ps(cmd){

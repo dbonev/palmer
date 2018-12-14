@@ -31,6 +31,7 @@ describe('Service Utils', function(){
             if (s.directory === 'services/test_service_one'){
                 found_service_one = true;
                 assert(s.name === 'test-service-one');
+                assert(s.test_directory === 'test/test/test_service_one');
             }
             if (s.directory === 'services/test_service_two'){
                 found_service_two = true;
@@ -46,6 +47,16 @@ describe('Service Utils', function(){
                 process.chdir('..');
                 done();
             }
+        });
+    });
+
+    it('Should get service test directory', function(done){
+        process.chdir('./tmp');
+        var index = 0;
+        service_utils.get_test_dir('test-service-one', dir => {
+            assert(dir === 'test/test/test_service_one');
+            process.chdir('..');
+            done();
         });
     });
 });

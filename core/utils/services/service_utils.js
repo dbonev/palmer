@@ -4,7 +4,14 @@ const fs_utils = require('../fs/fs_utils.js');
 const path = require('path');
 
 module.exports = {
-    enumerate_services: enumerate_services
+    enumerate_services: enumerate_services,
+    get_test_dir: get_test_dir
+}
+
+function get_test_dir(service_name, callback){
+    enumerate_services(function(service){
+        callback(service.test_directory);
+    }, s => s.name === service_name);
 }
 
 function enumerate_services(callback, filter){
@@ -18,9 +25,11 @@ function enumerate_services(callback, filter){
     function __create_dtos(){
         var result = [];
         for (const dir of service_directories){
+            const base_dir_name = path.basename(dir);
             const service_dto = { 
                 directory: dir,
-                name: path.basename(dir).replace(/_/g, '-')
+                test_directory: path.join('test', 'test', base_dir_name),
+                name: base_dir_name.replace(/_/g, '-')
             };
             if (filter
                     && !filter(service_dto)){
