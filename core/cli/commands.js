@@ -70,13 +70,18 @@ function test(cmd){
     function __up_if_needed(callback){
         var params = ['--recursive', '--timeout=60000'];
         if (cmd.serviceName){
-            up(cmd, function(data, err, exit_code){
-                if (exit_code === 0){
-                    service_utils.get_test_dir(cmd.serviceName, function(dir){
-                        params.push(dir);
-                        callback(params);
-                    });
+            console.log('Executing tests for service ' + cmd.serviceName + ' rebuild: ' + cmd.rebuild);
+            service_utils.get_test_dir(cmd.serviceName, function(dir){
+                params.push(dir);
+                if (!cmd.rebuild){
+                    callback(params);
+                    return;
                 }
+                up(cmd, function(data, err, exit_code){
+                    if (exit_code === 0){
+                        callback(params);
+                    }
+                });
             });
         } else {
             callback(params);
