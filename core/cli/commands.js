@@ -50,16 +50,46 @@ function init(dir, cmd){
 }
 
 function up(cmd, callback){
-    cp_utils(cmd, function(){
-        compile(cmd, function(){
-            var params = cmd.serviceName ? [cmd.serviceName] : undefined;
-            proc.spawn('env_up.bash', params, callback);
+    function __kill_and_remove_service(service_name, kill_remove_ready_callback){
+        kill(service_name, cmd, function(){
+            proc.spawn('docker-compose', ['rm', '-f', service_name], function(data, error, exit_code){
+                if (kill_remove_ready_callback && exit_code != null){
+                    kill_remove_ready_callback(exit_code);
+                }
+            });
+        });
+    }
+
+    function __rebuild_if_needed(callback){
+        if (!cmd.rebuild){
+            callback();
+            return;
+        }
+
+        if (cmd.serviceName){
+            __kill_and_remove_service(cmd.serviceName, () => callback());
+        } else {
+            down(cmd, () => callback());
+        }
+
+    }
+
+    __rebuild_if_needed(function(){
+        cp_utils(cmd, function(){
+            compile(cmd, function(){
+                var params = cmd.serviceName ? [cmd.serviceName] : undefined;
+                proc.spawn('env_up.bash', params, callback);
+            });
         });
     });
 }
 
-function down(cmd){
-    proc.spawn('env_down.bash');
+function down(cmd, callback){
+    proc.spawn('env_down.bash', null, function(data, error, exit_code){
+        if (callback && exit_code != null){
+            callback(exit_code);
+        }
+    });
 }
 
 function cleanup(cmd){
@@ -139,8 +169,12 @@ function ls_services(cmd){
     });
 }
 
-function kill(service, cmd){
-    proc.spawn('docker',  ['kill', service]);
+function kill(service, cmd, callback){
+    proc.spawn('docker',  ['kill', service], function(data, error, exit_code){
+        if (callback && exit_code != null){
+            callback(exit_code);
+        }
+    });
 }
 
 function start(service, cmd){

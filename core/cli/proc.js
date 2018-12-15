@@ -40,6 +40,7 @@ function resolve_palmer_script(script){
 
 function spawn_process(script, args, callback, options){
     callback = callback || __empty;
+    args = args || [];
 
     var spawned = spawn(resolve_palmer_script(script), args, options);
     spawned.stdout.on('data', function(data){

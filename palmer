@@ -22,6 +22,7 @@ program
 program
     .command('up')
     .option('-s, --service-name [service-name]', 'Build only the given servie_name')
+    .option('-r, --rebuild', 'Force kill and remove before building')
     .description('Build the environment / particular service')
     .action(commands.up);
 
@@ -68,7 +69,7 @@ program
 
 program
     .command('compile')
-    .option('-s, --service-name [service-name]', 'Copy utils in this service only')
+    .option('-s, --service-name [service-name]', 'Build only the service given')
     .description('Build the environment / install npm modules')
     .action(commands.compile);
 
