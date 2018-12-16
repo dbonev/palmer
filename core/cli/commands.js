@@ -94,6 +94,7 @@ function down(cmd, callback){
 
 function cleanup(cmd){
     proc.spawn('clear_docker_images.bash');
+    proc.spawn('clean_test_data.bash');
 }
 
 function test(cmd){
